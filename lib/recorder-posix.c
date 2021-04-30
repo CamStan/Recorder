@@ -95,6 +95,7 @@ int RECORDER_POSIX_DECL(fclose)(FILE *fp) {
     RECORDER_INTERCEPTOR_NOIO(int, fclose, (fp));
     RECORDER_INTERCEPTOR(1, args);
 }
+#if 0
 
 int RECORDER_POSIX_DECL(fsync)(int fd) {
     RECORDER_INTERCEPTOR_NOIO(int, fsync, (fd));
@@ -156,6 +157,7 @@ int RECORDER_POSIX_DECL(open64)(const char *path, int flags, ...) {
         RECORDER_INTERCEPTOR(2, args);
     }
 }
+#endif
 
 int RECORDER_POSIX_DECL(open)(const char *path, int flags, ...) {
     if (flags & O_CREAT) {
@@ -174,6 +176,7 @@ int RECORDER_POSIX_DECL(open)(const char *path, int flags, ...) {
         RECORDER_INTERCEPTOR(2, args);
     }
 }
+#if 0
 
 FILE* RECORDER_POSIX_DECL(fopen64)(const char *path, const char *mode) {
     RECORDER_INTERCEPTOR_NOIO(FILE*, fopen64, (path, mode))
@@ -181,6 +184,7 @@ FILE* RECORDER_POSIX_DECL(fopen64)(const char *path, const char *mode) {
     char** args = assemble_args_list(2, realrealpath(path), strdup(mode));
     RECORDER_INTERCEPTOR(2, args);
 }
+#endif
 
 FILE* RECORDER_POSIX_DECL(fopen)(const char *path, const char *mode) {
     RECORDER_INTERCEPTOR_NOIO(FILE*, fopen, (path, mode));
@@ -188,6 +192,7 @@ FILE* RECORDER_POSIX_DECL(fopen)(const char *path, const char *mode) {
     char** args = assemble_args_list(2, realrealpath(path), strdup(mode));
     RECORDER_INTERCEPTOR(2, args);
 }
+#if 0
 
 
 /**
@@ -279,6 +284,7 @@ size_t RECORDER_POSIX_DECL(fread)(void *ptr, size_t size, size_t nmemb, FILE *st
     RECORDER_INTERCEPTOR(4, args);
 }
 
+#endif
 size_t RECORDER_POSIX_DECL(fwrite)(const void *ptr, size_t size, size_t nmemb, FILE *stream) {
     // TODO:what's this aligned_flag for?
     // int aligned_flag = 0;
@@ -288,6 +294,7 @@ size_t RECORDER_POSIX_DECL(fwrite)(const void *ptr, size_t size, size_t nmemb, F
     char** args = assemble_args_list(4, ptoa(ptr), itoa(size), itoa(nmemb), stream2fdstr(stream));
     RECORDER_INTERCEPTOR(4, args);
 }
+#if 0
 
 int RECORDER_POSIX_DECL(fprintf)(FILE *stream, const char *format, ...) {
     // Get the size of the string fprintf will write
@@ -346,11 +353,13 @@ char* RECORDER_POSIX_DECL(getcwd)(char *buf, size_t size) {
     char** args = assemble_args_list(2, ptoa(buf), itoa(size));
     RECORDER_INTERCEPTOR(2, args);
 }
+#endif
 int RECORDER_POSIX_DECL(mkdir)(const char *pathname, mode_t mode) {
     RECORDER_INTERCEPTOR_NOIO(int, mkdir, (pathname, mode));
     char** args = assemble_args_list(2, realrealpath(pathname), itoa(mode));
     RECORDER_INTERCEPTOR(2, args)
 }
+#if 0
 int RECORDER_POSIX_DECL(rmdir)(const char *pathname) {
     RECORDER_INTERCEPTOR_NOIO(int, rmdir, (pathname));
     char** args = assemble_args_list(1, realrealpath(pathname));
@@ -504,6 +513,7 @@ FILE* RECORDER_POSIX_DECL(fdopen)(int fd, const char *mode) {
     char** args = assemble_args_list(2, itoa(fd), ptoa(mode));
     RECORDER_INTERCEPTOR(2, args);
 }
+#endif
 int RECORDER_POSIX_DECL(fileno)(FILE *stream) {
     RECORDER_INTERCEPTOR_NOIO(int, fileno, (stream));
     char** args = assemble_args_list(1, stream2fdstr(stream));
@@ -514,6 +524,7 @@ int RECORDER_POSIX_DECL(access)(const char *path, int amode) {
     char** args = assemble_args_list(2, realrealpath(path), itoa(amode));
     RECORDER_INTERCEPTOR(2, args);
 }
+#if 0
 int RECORDER_POSIX_DECL(faccessat)(int fd, const char *path, int amode, int flag) {
     RECORDER_INTERCEPTOR_NOIO(int, faccessat, (fd, path, amode, flag));
     char** args = assemble_args_list(4, itoa(fd), realrealpath(path), itoa(amode), itoa(flag));
@@ -525,11 +536,13 @@ FILE* RECORDER_POSIX_DECL(tmpfile)(void) {
     char **args = NULL;
     RECORDER_INTERCEPTOR(0, args);
 }
+#endif
 int RECORDER_POSIX_DECL(remove)(const char *path) {
     RECORDER_INTERCEPTOR_NOIO(int, remove, (path));
     char** args = assemble_args_list(1, realrealpath(path));
     RECORDER_INTERCEPTOR(1, args)
 }
+#if 0
 int RECORDER_POSIX_DECL(truncate)(const char *path, off_t length) {
     RECORDER_INTERCEPTOR_NOIO(int, truncate, (path, length));
     char** args = assemble_args_list(2, realrealpath(path), itoa(length));
@@ -541,3 +554,4 @@ int RECORDER_POSIX_DECL(ftruncate)(int fd, off_t length) {
     RECORDER_INTERCEPTOR(2, args);
 }
 
+#endif

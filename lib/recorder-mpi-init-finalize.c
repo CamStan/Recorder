@@ -56,6 +56,17 @@ static double local_tstart, local_tend;
 static int rank, nprocs;
 
 void recorder_init(int *argc, char ***argv) {
+
+#ifdef RECORDER_GOTCHA
+    int rc;
+
+    rc = setup_gotcha_wrappers();
+    if (rc != 0) {
+        printf("[GOTCHA ERROR] Failed to set up GOTCHA wrappers");
+        return rc;
+    }
+#endif
+
     MAP_OR_FAIL(PMPI_Comm_size)
     MAP_OR_FAIL(PMPI_Comm_rank)
     MAP_OR_FAIL(PMPI_Wtime)

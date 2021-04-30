@@ -92,7 +92,31 @@ char* realrealpath(const char* path);           // return the absolute path (map
 
 
 
-#ifdef RECORDER_PRELOAD
+#ifdef RECORDER_GOTCHA
+    #include <gotcha/gotcha.h>
+
+    int setup_gotcha_wrappers(void);
+
+    /* Declare anything that will be used externally */
+    #define RECORDER_FORWARD_DECL(name, ret, args)                              \
+        extern gotcha_wrappee_handle_t wrappee_handle_##name;                   \
+        extern ret(*__real_##name) args;                                        \
+        ret __warp_##name args
+
+    /* The name of the real function pointer */
+    #define RECORDER_REAL_CALL(func) __real_##func
+
+    /* Ask gotcha for address to point __real_func to the real function */
+    #define MAP_OR_FAIL(func)                                                   \
+    do {                                                                        \
+        if (NULL == __real_##func) {                                            \
+            __real_##func = gotcha_get_wrappee(wrappee_handle_##func);          \
+            if (NULL == __real_##func) {                                        \
+                printf("GOTCHA missing wrappee for %s\n", #func);               \
+            }                                                                   \
+        }                                                                       \
+    } while (0);
+#elif RECORDER_PRELOAD
     #include <dlfcn.h>
     /*
      * Declare the function signatures for real functions
@@ -124,7 +148,7 @@ char* realrealpath(const char* path);           // return the absolute path (map
 /**
  * Decide wether to intercept (override) funciton calls
  */
-#ifdef RECORDER_PRELOAD
+#if defined RECORDER_GOTCHA || defined RECORDER_PRELOAD
     #ifndef DISABLE_MPIO_TRACE
         #define RECORDER_MPI_DECL(func) func
     #else
